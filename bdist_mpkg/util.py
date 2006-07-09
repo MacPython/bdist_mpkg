@@ -56,16 +56,16 @@ def copy_tree(src, dst,
         condition = skipscm
 
     if not dry_run and not os.path.isdir(src):
-        raise DistutilsFileError, \
-              "cannot copy tree '%s': not a directory" % src
+        raise DistutilsFileError(
+            "cannot copy tree '%s': not a directory" % src)
     try:
         names = os.listdir(src)
     except os.error, (errno, errstr):
         if dry_run:
             names = []
         else:
-            raise DistutilsFileError, \
-                  "error listing files in '%s': %s" % (src, errstr)
+            raise DistutilsFileError("error listing files in '%s': %s" % (
+                src, errstr))
 
     if not dry_run:
         mkpath(dst)

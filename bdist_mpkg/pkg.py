@@ -1,5 +1,6 @@
-import os, sys
-from StringIO import StringIO
+import os
+import sys
+from cStringIO import StringIO
 from distutils.dir_util import mkpath
 from distutils.file_util import copy_file
 

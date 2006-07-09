@@ -6,7 +6,9 @@ binary distribution)."""
 import os
 import sys
 import zipfile
-from distutils.core import Command
+
+from setuptools import Command
+
 from distutils.util import get_platform, byte_compile
 from distutils.dir_util import remove_tree, mkpath
 from distutils.errors import *

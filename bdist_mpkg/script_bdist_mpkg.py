@@ -1,5 +1,8 @@
 #!/usr/bin/env python
+
 import sys, os
+
+import setuptools
 import bdist_mpkg
 
 def main():

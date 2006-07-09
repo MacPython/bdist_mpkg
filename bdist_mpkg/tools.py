@@ -21,10 +21,13 @@ def run_setup(*args, **kwargs):
     """
     Re-entrant version of distutils.core.run_setup()
     """
-    PRESERVE = ('_setup_stop_after', '_setup_distribution')
+    PRESERVE = '_setup_stop_after', '_setup_distribution'
     d = {}
     for k in PRESERVE:
-        d[k] = getattr(distutils.core, k, None)
+        try:
+            d[k] = getattr(distutils.core, k)
+        except AttributeError:
+            pass
     try:
         return distutils.core.run_setup(*args, **kwargs)
     finally:
@@ -84,7 +87,7 @@ def get_gid(name, _cache={}):
     try:
         return _cache[name]
     except KeyError:
-        raise ValueError, 'group %s not found' % (name,)
+        raise ValueError('group %s not found' % (name,))
 
 def find_root(path, base='/'):
     """
@@ -119,7 +122,7 @@ def sw_vers(_cache=[]):
                 _cache.append(Version(value.strip()))
                 break
         else:
-            raise ValueError, "What?!"
+            raise ValueError("sw_vers not behaving correctly")
     return _cache[0]
 
 def is_framework_python():
