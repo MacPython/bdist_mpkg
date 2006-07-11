@@ -13,6 +13,26 @@ def skipscm(ofn):
         return False
     return True
 
+def skipfunc(junk=(), junk_exts=(), chain=()):
+    junk = set(junk)
+    junk_exts = set(junk_exts)
+    chain = tuple(chain)
+    def _skipfunc(fn):
+        if os.path.basename(fn) in junk:
+            return False
+        elif os.path.splitext(fn)[1] in junk_exts:
+            return False
+        for func in chain:
+            if not func(fn):
+                return False
+        else:
+            return True
+    return _skipfunc
+
+JUNK = ['.DS_Store', '.gdb_history', 'build', 'dist'] + SCMDIRS
+JUNK_EXTS = ['.pbxuser', '.pyc', '.pyo', '.swp']
+skipjunk = skipfunc(JUNK, JUNK_EXTS)
+
 def copy_tree(src, dst,
         preserve_mode=1,
         preserve_times=1,
@@ -53,7 +73,7 @@ def copy_tree(src, dst,
     dst = fsencoding(dst)
 
     if condition is None:
-        condition = skipscm
+        condition = skipjunk
 
     if not dry_run and not os.path.isdir(src):
         raise DistutilsFileError(
