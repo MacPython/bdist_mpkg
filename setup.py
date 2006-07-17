@@ -5,7 +5,7 @@ ez_setup.use_setuptools()
 
 from setuptools import setup, Extension
 
-VERSION = '0.4.2'
+VERSION = '0.4.3'
 DESCRIPTION = "Builds Mac OS X installer packages from distutils"
 LONG_DESCRIPTION = """
 bdist_mpkg is a distutils plugin that implements the bdist_mpkg command,
