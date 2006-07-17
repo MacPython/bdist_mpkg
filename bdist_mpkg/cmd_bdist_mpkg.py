@@ -91,6 +91,7 @@ class bdist_mpkg (Command):
         self.scheme_copy = {}
         self.scheme_subprojects = {}
         self.command_schemes = None
+        self.custom_schemes = None
         self.packagesdir = None
         self.metapackagename = None
         self.macosx_version = tools.sw_vers()
@@ -138,11 +139,22 @@ class bdist_mpkg (Command):
         if self.pkg_base is None:
             self.pkg_base = os.path.join(self.bdist_base, 'mpkg')
 
+        if self.custom_schemes is None:
+            self.custom_schemes = {}
+        for scheme, desc in self.custom_schemes.iteritems():
+            if 'description' in desc:
+                self.scheme_descriptions[scheme] = desc['description']
+            if 'prefix' in desc:
+                self.scheme_map[scheme] = desc['prefix']
+            if 'source' in desc:
+                self.scheme_copy[scheme] = desc['source']
+
         install = self.get_finalized_command('install')
-        for scheme,description in INSTALL_SCHEME_DESCRIPTIONS.iteritems():
+        for scheme, description in INSTALL_SCHEME_DESCRIPTIONS.iteritems():
             self.scheme_command.setdefault(scheme, 'install')
             self.scheme_descriptions.setdefault(scheme, description)
-            self.scheme_map.setdefault(scheme, os.path.realpath(getattr(install, 'install_' + scheme)))
+            self.scheme_map.setdefault(scheme,
+                os.path.realpath(getattr(install, 'install_' + scheme)))
 
         if tools.is_framework_python():
             if self.get_scheme_prefix('scripts').startswith(sys.prefix):
