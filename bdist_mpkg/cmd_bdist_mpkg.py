@@ -246,6 +246,7 @@ class bdist_mpkg (Command):
         for scheme in self.get_command_schemes()['install']:
             prefix = self.get_scheme_install_prefix(scheme)
             setattr(install, 'install_' + scheme, prefix)
+        install.single_version_externally_managed = 1
         install.root = self.pkg_base
         install.skip_build = self.skip_build
         install.warn_dir = 0
