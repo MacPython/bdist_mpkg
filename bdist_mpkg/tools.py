@@ -80,10 +80,18 @@ def walk_files(path):
 
 def get_gid(name, _cache={}):
     if not _cache:
-        for line in os.popen('/usr/bin/nidump group .'):
-            fields = line.split(':')
-            if len(fields) >= 3:
-                _cache[fields[0]] = int(fields[2])
+        if os.path.exists('/usr/bin/dscl'):
+            # Fix for Mac OS X 10.5 (Leopard)
+            for line in os.popen('/usr/bin/dscl . -list /groups gid'):
+                fields = line.split()
+                if len(fields) >= 2:
+                    _cache[fields[0]] = int(fields[1])
+        else:
+            for line in os.popen('/usr/bin/nidump group .'):
+                fields = line.split(':')
+                if len(fields) >= 3:
+                    _cache[fields[0]] = int(fields[2])
+        
     try:
         return _cache[name]
     except KeyError:
