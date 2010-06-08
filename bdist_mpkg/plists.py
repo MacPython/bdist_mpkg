@@ -70,7 +70,7 @@ def path_requirement(SpecArgument, Level=u'requires', **kw):
 FRIENDLY_PREFIX = {
     os.path.expanduser(u'~/Library/Frameworks') : u'User',
     u'/System/Library/Frameworks' : u'Apple',
-    u'/Library/Frameworks' : u'System',
+    u'/Library/Frameworks' : u'python.org',
     u'/opt/local' : u'DarwinPorts',
     u'/usr/local' : u'Unix',
     u'/sw' : u'Fink',

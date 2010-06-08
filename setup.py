@@ -34,7 +34,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
     author="Bob Ippolito",
-    author_email="bob@redivi.com",
+    author_email="pythonmac-sig@python.org",
     url="http://undefined.org/python/#bdist_mpkg",
     license="MIT License",
     packages=['bdist_mpkg'],
