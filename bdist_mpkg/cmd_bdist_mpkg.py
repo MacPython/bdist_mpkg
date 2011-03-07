@@ -106,7 +106,10 @@ class bdist_mpkg (Command):
         return self.distribution.get_version()
 
     def make_fullplatcomponents(self, *args):
-        lst = [s.replace('-', '_') for s in args]
+        #lst = [s.replace('-', '_') for s in args]
+        ## We don't want to replace '-' as above, because this is harder to
+        ## replicate.
+        lst = [s for s in args]
         lst.extend([
             'py' + sys.version[:3],
             'macosx' + '.'.join(map(str, self.macosx_version.version[:2])),
