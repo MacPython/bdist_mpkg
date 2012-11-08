@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-import ez_setup
-ez_setup.use_setuptools()
-
 from setuptools import setup
 
 VERSION = '0.4.4'
