@@ -74,8 +74,10 @@ def walk_files(path):
         for fn in files:
             yield os.path.join(root, fn)
 
-def get_gid(name, _cache={}):
-    return grp.getgrnam(name).gr_gid 
+def get_gid(name):
+    """ Return integer gid for group with name `name`
+    """
+    return grp.getgrnam(name).gr_gid
 
 def find_root(path, base='/'):
     """
