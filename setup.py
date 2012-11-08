@@ -2,31 +2,15 @@
 
 from setuptools import setup
 
-VERSION = '0.4.4'
-DESCRIPTION = "Builds Mac OS X installer packages from distutils"
-LONG_DESCRIPTION = """
-bdist_mpkg is a distutils plugin that implements the bdist_mpkg command,
-which builds a Mac OS X metapackage for use by Installer.app for easy GUI
-installation of Python modules, much like bdist_wininst.
+import os
 
-It also comes with a bdist_mpkg script, which is a setup.py front-end that
-will allow you to easy build an installer metapackage from nearly any existing
-package that uses distutils.
-"""
-
-CLASSIFIERS = filter(None, map(str.strip,
-"""
-Intended Audience :: Developers
-License :: OSI Approved :: MIT License
-Programming Language :: Python
-Operating System :: MacOS :: MacOS X
-Topic :: Software Development :: Libraries :: Python Modules
-Topic :: Software Development :: Build Tools
-""".splitlines()))
+# Get version and release info, which is all stored in bdist_mpkg/info.py
+ver_file = os.path.join('bdist_mpkg', 'info.py')
+exec(open(ver_file).read())
 
 setup(
     name="bdist_mpkg",
-    version=VERSION,
+    version=__version__,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
