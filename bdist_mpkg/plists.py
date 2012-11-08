@@ -2,8 +2,8 @@ import os
 import sys
 from plistlib import Plist
 
-import bdist_mpkg
-from bdist_mpkg import tools
+from . import __version__ as bdist_mpkg_version
+from . import tools
 
 def _major_minor(v):
     rval = [0, 0]
@@ -32,11 +32,10 @@ def common_info(name, version):
             PythonShortVersion=unicode(sys.version[:3]),
             PythonExecutable=unicode(sys.executable),
             bdist_mpkg=dict(
-                version=unicode(bdist_mpkg.__version__),
+                version=unicode(bdist_mpkg_version),
             ),
         ),
     )
-    return defaults
 
 def pkg_info(name, version):
     d = common_info(name, version)
@@ -119,8 +118,9 @@ def mpkg_info(name, version, packages=[]):
     return d
 
 def checkpath_plugin(path):
+    # This does not appear to be called in this codebase
     if not isinstance(path, unicode):
-        path = unicode(path, encoding)
+        path = unicode(path, encoding) # encoding not defined
     return dict(
         searchPlugin=u'CheckPath',
         path=path,

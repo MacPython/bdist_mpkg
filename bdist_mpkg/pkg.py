@@ -1,12 +1,11 @@
 import os
-import sys
 from cStringIO import StringIO
 from distutils.dir_util import mkpath
 from distutils.file_util import copy_file
 
-from bdist_mpkg import tools, plists
-from bdist_mpkg.util import copy_tree
-from bdist_mpkg.templates import InstallationCheck
+from . import tools, plists
+from .util import copy_tree
+from .templates import InstallationCheck
 
 def write_template((script, strings), dest, mkpath=mkpath):
     spath = os.path.join(dest, 'InstallationCheck')

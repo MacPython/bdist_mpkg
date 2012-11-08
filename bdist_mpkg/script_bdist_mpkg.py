@@ -3,7 +3,6 @@
 import sys, os
 
 import setuptools
-import bdist_mpkg
 
 def main():
     del sys.argv[0]

@@ -9,13 +9,12 @@ import zipfile
 
 from setuptools import Command
 
-from distutils.util import get_platform, byte_compile
+from distutils.util import byte_compile
 from distutils.dir_util import remove_tree, mkpath
-from distutils.errors import *
 from distutils import log
 
-from bdist_mpkg import pkg, tools, plists
-from bdist_mpkg.util import copy_tree
+from . import pkg, tools, plists
+from .util import copy_tree
 
 INSTALL_SCHEME_DESCRIPTIONS = dict(
     purelib = u'(Required) Pure Python modules and packages',
@@ -430,9 +429,6 @@ class bdist_mpkg (Command):
         # And make an archive relative to the root of the
         # pseudo-installation tree.
         self.mkpath(self.packagesdir)
-
-        name = self.get_name()
-        version = self.get_version()
 
         for scheme in self.get_schemes():
             schemedir = self.get_scheme_dir(scheme)

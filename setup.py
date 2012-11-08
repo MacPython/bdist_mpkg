@@ -3,7 +3,7 @@
 import ez_setup
 ez_setup.use_setuptools()
 
-from setuptools import setup, Extension
+from setuptools import setup
 
 VERSION = '0.4.4'
 DESCRIPTION = "Builds Mac OS X installer packages from distutils"
@@ -18,7 +18,7 @@ package that uses distutils.
 """
 
 CLASSIFIERS = filter(None, map(str.strip,
-"""                 
+"""
 Intended Audience :: Developers
 License :: OSI Approved :: MIT License
 Programming Language :: Python

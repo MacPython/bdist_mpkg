@@ -1,16 +1,11 @@
 import os
 import grp
 import sys
-from itertools import chain
 from distutils.util import spawn
 from distutils.version import StrictVersion, LooseVersion
 from distutils.dir_util import mkpath
 import distutils.core
 
-try:
-    set
-except NameError:
-    from sets import Set as set
 
 def Version(s):
     try:

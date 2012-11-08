@@ -1,8 +1,5 @@
-import os, sys
-try:
-    set
-except NameError:
-    from sets import Set as set
+import os
+import sys
 
 def fsencoding(s, encoding=sys.getfilesystemencoding()):
     if isinstance(s, unicode):
