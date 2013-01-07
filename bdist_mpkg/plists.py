@@ -4,6 +4,7 @@ from plistlib import Plist
 
 from . import __version__ as bdist_mpkg_version
 from . import tools
+from .py3k import unicode, u, any_str_type
 
 def _major_minor(v):
     rval = [0, 0]
@@ -19,14 +20,14 @@ def common_info(name, version):
     name, version = unicode(name), tools.Version(version)
     major, minor = _major_minor(version)
     return dict(
-        CFBundleGetInfoString=u'%s %s' % (name, version),
-        CFBundleIdentifier=u'org.pythonmac.%s' % (name,),
+        CFBundleGetInfoString=u('%s %s' % (name, version)),
+        CFBundleIdentifier=u('org.pythonmac.%s' % (name,)),
         CFBundleName=name,
         CFBundleShortVersionString=unicode(version),
         IFMajorVersion=major,
         IFMinorRevision=minor,
         IFPkgFormatVersion=0.10000000149011612,
-        IFRequirementDicts=[path_requirement(u'/')],
+        IFRequirementDicts=[path_requirement(u('/'))],
         PythonInfoDict=dict(
             PythonLongVersion=unicode(sys.version),
             PythonShortVersion=unicode(sys.version[:3]),
@@ -42,37 +43,37 @@ def pkg_info(name, version):
     # Keys that can only appear in single packages
     d.update(dict(
         IFPkgFlagAllowBackRev=False,
-        IFPkgFlagAuthorizationAction=u'AdminAuthorization',
+        IFPkgFlagAuthorizationAction=u('AdminAuthorization'),
         #IFPkgFlagDefaultLocation=u'/Library/Python/2.3',
         IFPkgFlagFollowLinks=True,
         IFPkgFlagInstallFat=False,
         IFPkgFlagIsRequired=False,
         IFPkgFlagOverwritePermissions=False,
         IFPkgFlagRelocatable=False,
-        IFPkgFlagRestartAction=u'NoRestart',
+        IFPkgFlagRestartAction=u('NoRestart'),
         IFPkgFlagRootVolumeOnly=True,
         IFPkgFlagUpdateInstalledLangauges=False,
     ))
     return d
 
-def path_requirement(SpecArgument, Level=u'requires', **kw):
+def path_requirement(SpecArgument, Level=u('requires'), **kw):
     return dict(
         Level=Level,
-        SpecType=u'file',
+        SpecType=u('file'),
         SpecArgument=tools.unicode_path(SpecArgument),
-        SpecProperty=u'NSFileType',
-        TestOperator=u'eq',
-        TestObject=u'NSFileTypeDirectory',
+        SpecProperty=u('NSFileType'),
+        TestOperator=u('eq'),
+        TestObject=u('NSFileTypeDirectory'),
         **kw
     )
 
 FRIENDLY_PREFIX = {
-    os.path.expanduser(u'~/Library/Frameworks') : u'User',
-    u'/System/Library/Frameworks' : u'Apple',
-    u'/Library/Frameworks' : u'python.org',
-    u'/opt/local' : u'DarwinPorts',
-    u'/usr/local' : u'Unix',
-    u'/sw' : u'Fink',
+    os.path.expanduser(u('~/Library/Frameworks')) : u('User'),
+    u('/System/Library/Frameworks') : u('Apple'),
+    u('/Library/Frameworks') : u('python.org'),
+    u('/opt/local') : u('DarwinPorts'),
+    u('/usr/local') : u('Unix'),
+    u('/sw') : u('Fink'),
 }
 
 def python_requirement(pkgname, prefix=None, version=None, **kw):
@@ -88,9 +89,9 @@ def python_requirement(pkgname, prefix=None, version=None, **kw):
     else:
         dprefix = prefix
     dprefix = tools.unicode_path(dprefix)
-    name = u'%s Python %s' % (FRIENDLY_PREFIX.get(dprefix, dprefix), version)
+    name = u('%s Python %s' % (FRIENDLY_PREFIX.get(dprefix, dprefix), version))
     kw.setdefault('LabelKey', name)
-    title = u'%s requires %s to install.' % (pkgname, name,)
+    title = u('%s requires %s to install.' % (pkgname, name,))
     kw.setdefault('TitleKey', title)
     kw.setdefault('MessageKey', title)
     return path_requirement(prefix, **kw)
@@ -104,15 +105,15 @@ def mpkg_info(name, version, packages=[]):
         if items is not None:
             p = dict(items())
         else:
-            if isinstance(p, basestring):
+            if isinstance(p, any_str_type):
                 p = [p]
             p = dict(zip(
-                (u'IFPkgFlagPackageLocation', u'IFPkgFlagPackageSelection'),
+                (u('IFPkgFlagPackageLocation'), u('IFPkgFlagPackageSelection')),
                 p
             ))
         npackages.append(p)
     d.update(dict(
-        IFPkgFlagComponentDirectory=u'./Contents/Packages',
+        IFPkgFlagComponentDirectory=u('./Contents/Packages'),
         IFPkgFlagPackageList=npackages,
     ))
     return d
@@ -122,7 +123,7 @@ def checkpath_plugin(path):
     if not isinstance(path, unicode):
         path = unicode(path, encoding) # encoding not defined
     return dict(
-        searchPlugin=u'CheckPath',
+        searchPlugin=u('CheckPath'),
         path=path,
     )
 

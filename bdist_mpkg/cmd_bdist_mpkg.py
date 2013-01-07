@@ -15,13 +15,14 @@ from distutils import log
 
 from . import pkg, tools, plists
 from .util import copy_tree
+from .py3k import u
 
 INSTALL_SCHEME_DESCRIPTIONS = dict(
-    purelib = u'(Required) Pure Python modules and packages',
-    platlib = u'(Required) Python modules, extensions, and packages',
-    headers = u'(Optional) Header files for development',
-    scripts = u'(Optional) Scripts to use from the Unix shell',
-    data    = u'(Optional) Additional data files (sometimes documentation)',
+    purelib = u('(Required) Pure Python modules and packages'),
+    platlib = u('(Required) Python modules, extensions, and packages'),
+    headers = u('(Optional) Header files for development'),
+    scripts = u('(Optional) Scripts to use from the Unix shell'),
+    data    = u('(Optional) Additional data files (sometimes documentation)'),
 )
 
 class bdist_mpkg (Command):
@@ -123,7 +124,7 @@ class bdist_mpkg (Command):
         rval = self.command_schemes
         if rval is None:
             rval = {}
-            for scheme, cmd in self.scheme_command.iteritems():
+            for scheme, cmd in self.scheme_command.items():
                 rval.setdefault(cmd, []).append(scheme)
             self.command_schemes = rval
         return rval
@@ -143,7 +144,7 @@ class bdist_mpkg (Command):
 
         if self.custom_schemes is None:
             self.custom_schemes = {}
-        for scheme, desc in self.custom_schemes.iteritems():
+        for scheme, desc in self.custom_schemes.items():
             if 'description' in desc:
                 self.scheme_descriptions[scheme] = desc['description']
             if 'prefix' in desc:
@@ -152,7 +153,7 @@ class bdist_mpkg (Command):
                 self.scheme_copy[scheme] = desc['source']
 
         install = self.get_finalized_command('install')
-        for scheme, description in INSTALL_SCHEME_DESCRIPTIONS.iteritems():
+        for scheme, description in INSTALL_SCHEME_DESCRIPTIONS.items():
             self.scheme_command.setdefault(scheme, 'install')
             self.scheme_descriptions.setdefault(scheme, description)
             self.scheme_map.setdefault(scheme,
@@ -210,7 +211,7 @@ class bdist_mpkg (Command):
         pass
 
     def run_subprojects(self):
-        for scheme,setupfile in self.scheme_subprojects.iteritems():
+        for scheme,setupfile in self.scheme_subprojects.items():
             self.run_subproject(scheme, setupfile)
 
     def run_subproject(self, scheme, setupfile):
@@ -350,7 +351,7 @@ class bdist_mpkg (Command):
             return None
         files, common, prefix = self.get_scheme_root(scheme)
         if prefix is not None:
-            description += u'\nInstalled to: ' + tools.unicode_path(prefix)
+            description += u('\nInstalled to: ') + tools.unicode_path(prefix)
         return description
 
     def get_metapackage(self):
@@ -412,7 +413,7 @@ class bdist_mpkg (Command):
                 self.run_command(command)
 
     def run_copy(self):
-        for scheme, source in self.scheme_copy.iteritems():
+        for scheme, source in self.scheme_copy.items():
             log.info("copying files for scheme %s" % (scheme,))
             target = self.get_scheme_install_target(scheme)
             self.copy_tree(source, target)

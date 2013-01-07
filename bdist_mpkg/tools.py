@@ -6,6 +6,8 @@ from distutils.version import StrictVersion, LooseVersion
 from distutils.dir_util import mkpath
 import distutils.core
 
+from .py3k import unicode
+
 
 def Version(s):
     try:
@@ -27,7 +29,7 @@ def run_setup(*args, **kwargs):
     try:
         return distutils.core.run_setup(*args, **kwargs)
     finally:
-        for k,v in d.iteritems():
+        for k,v in d.items():
             setattr(distutils.core, k, v)
 
 def adminperms(src, verbose=0, dry_run=0):
@@ -98,7 +100,7 @@ def admin_writable(path):
         path = os.path.dirname(path)
     s = os.stat(path)
     mode = s.st_mode
-    return (mode & 00002) or (s.st_gid == gid and mode & 00020)
+    return (mode & 0x2) or (s.st_gid == gid and mode & 0x10)
 
 def reduce_size(files):
     return sum([os.stat(fn).st_size for fn in files])

@@ -81,12 +81,13 @@ def copy_tree(src, dst,
             "cannot copy tree '%s': not a directory" % src)
     try:
         names = os.listdir(src)
-    except os.error, (errno, errstr):
+    except OSError:
+        err = sys.exc_info()[1] # Python 2.5 / 3 compatibility
         if dry_run:
             names = []
         else:
             raise DistutilsFileError("error listing files in '%s': %s" % (
-                src, errstr))
+                src, err))
 
     if not dry_run:
         mkpath(dst)

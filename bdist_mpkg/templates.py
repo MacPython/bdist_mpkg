@@ -1,9 +1,10 @@
+from .py3k import u
 InstallationCheck = dict(
     postjaguar=(
-        u"#!/bin/sh\nexit 112\n",
-        u'"16" = "This package requires Mac OS X 10.3 or later";',
+        u("#!/bin/sh\nexit 112\n"),
+        u('"16" = "This package requires Mac OS X 10.3 or later";'),
     ),
-    prepanther=(u"""#!/bin/sh
+    prepanther=(u("""#!/bin/sh
 #
 # We use IFRequirementDicts anyway and "parse" it to find where expect
 # Python to be.  It's remotely possible that Python is not installed
@@ -16,7 +17,7 @@ echo "Error during InstallationCheck"
 echo "Package: $1"
 echo "Expected path not found: $IPATH"
 exit 112
-""",
-        u'"16" = "This package requires MacPython to be installed";',
-    ),
+"""),
+                u('"16" = "This package requires MacPython to be installed";'),
+               ),
 )

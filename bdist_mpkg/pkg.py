@@ -1,40 +1,43 @@
 import os
-from cStringIO import StringIO
 from distutils.dir_util import mkpath
 from distutils.file_util import copy_file
 
-from . import tools, plists
+from . import tools
+from . import plists
 from .util import copy_tree
 from .templates import InstallationCheck
+from .py3k import StringIO, u
 
-def write_template((script, strings), dest, mkpath=mkpath):
+
+def write_template(script_strings, dest, mkpath=mkpath):
+    script, strings = script_strings
     spath = os.path.join(dest, 'InstallationCheck')
-    f = open(spath, 'w')
+    f = open(spath, 'wb')
     f.write(script.encode('utf8'))
     f.close()
-    os.chmod(spath, os.stat(spath)[0] | 0111)
+    os.chmod(spath, os.stat(spath)[0] | 0x49) # 0111 octal
     lproj = os.path.join(dest, 'English.lproj')
     mkpath(lproj)
     spath = os.path.join(lproj, 'InstallationCheck.strings')
-    f = open(spath, 'w')
+    f = open(spath, 'wb')
     f.write(strings.encode('utf16'))
     f.close()
 
 def write_sizes(count, size, compressed, pkgdir):
     f = open(
         os.path.join(pkgdir, 'Contents', 'Resources', 'Archive.sizes'),
-        'w'
+        'wb'
     )
-    f.write('NumFiles %d\nInstalledSize %d\nCompressedSize %d'
-        % (count, size, compressed))
+    f.write(('NumFiles %d\nInstalledSize %d\nCompressedSize %d'
+        % (count, size, compressed)).encode('utf8'))
     f.close()
 
 TEXT_EXTS = '.rtfd', '.rtf', '.html', '.txt'
 IMAGE_EXTS = '.tiff', '.png', '.jpg'
 
 def write_pkginfo(pkgdir):
-    f = open(os.path.join(pkgdir, 'Contents', 'PkgInfo'), 'w')
-    f.write('pmkrpkg1')
+    f = open(os.path.join(pkgdir, 'Contents', 'PkgInfo'), 'wb')
+    f.write('pmkrpkg1'.encode('utf8'))
     f.close()
 
 def try_exts(path, exts=TEXT_EXTS):
@@ -65,8 +68,8 @@ def copy_doc(path, name, pkgdir, exts=TEXT_EXTS, language=None, dry_run=0,
     dest = os.path.join(destdir, name + ext)
     if is_string:
         if not dry_run:
-            f = file(dest, 'wb')
-            f.write(path.getvalue())
+            f = open(dest, 'wb')
+            f.write(path.getvalue().encode('utf8'))
             f.close()
     elif ext == '.rtfd':
         copy_tree(path, dest)
@@ -89,7 +92,7 @@ def make_metapackage(cmd, name, version, packages, pkgdir,
     if description is None:
         description = dist.get_description()
     if not description:
-        description = u'%s %s' % (name, version)
+        description = u('%s %s' % (name, version))
 
     mkpath(os.path.join(pkgdir, 'Contents', 'Resources'))
     if not dry_run:
@@ -160,9 +163,9 @@ def make_package(cmd, name, version, files, common, prefix, pkgdir,
         write_sizes(count, size, compressed, pkgdir)
 
     if admin:
-        auth = u'AdminAuthorization'
+        auth = u('AdminAuthorization')
     else:
-        auth = u'RootAuthorization'
+        auth = u('RootAuthorization')
 
     ninfo = plists.pkg_info(name, version)
     ninfo.update(dict(
