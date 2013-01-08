@@ -9,8 +9,12 @@ from __future__ import with_statement
 
 import sys
 import os
+import pwd
 from os.path import dirname, join as pjoin, isfile, isdir
 from subprocess import check_call
+from shutil import rmtree
+
+from ..tools import reown_paxboms, find_paxboms, unpax, ugrp_path
 
 from ..tmpdirs import TemporaryDirectory
 
@@ -30,13 +34,39 @@ def test_myself():
         check_call(cmd, shell=True)
         tmpls = os.listdir(tmpdir)
         assert_equal(len(tmpls), 1)
-        assert_true(tmpls[0].endswith('.mpkg'))
-        assert_true(isdir(pjoin(tmpdir, tmpls[0])))
+        mpkg_dir = tmpls[0]
+        assert_true(mpkg_dir.endswith('.mpkg'))
+        assert_true(isdir(pjoin(tmpdir, mpkg_dir)))
         # Check zipping
         cmd += ' -z'
         check_call(cmd, shell=True)
         tmpls = sorted(os.listdir(tmpdir))
         assert_equal(len(tmpls), 2)
-        assert_true(tmpls[0].endswith('.mpkg'))
+        assert_equal(tmpls[0], mpkg_dir)
         assert_true(tmpls[1].endswith('.zip'))
         assert_true(isfile(pjoin(tmpdir, tmpls[1])))
+        # Try reperming
+        mpkg_dir = pjoin(tmpdir, mpkg_dir)
+        # Find paxboms
+        paxboms = list(find_paxboms(mpkg_dir))
+        assert_equal(len(paxboms), 2) # scripts and library
+        # Extract them and check permissions
+        paxdir = pjoin(tmpdir, 'pax_files')
+        grps = []
+        for pxbom in paxboms:
+            rmtree(paxdir, ignore_errors=True)
+            os.mkdir(paxdir)
+            unpax(pxbom[0], paxdir)
+            user, grp = ugrp_path(pjoin(paxdir, os.listdir(paxdir)[0]))
+            assert_equal(user, pwd.getpwuid(os.getuid())[0])
+            grps.append(grp)
+        assert_equal([g for g in grps if g != grp], [])
+        # Do paxbom permission change
+        reown_paxboms(mpkg_dir, user, "everyone")
+        for pxbom in paxboms:
+            rmtree(paxdir, ignore_errors=True)
+            os.mkdir(paxdir)
+            unpax(pxbom[0], paxdir)
+            user, grp = ugrp_path(pjoin(paxdir, os.listdir(paxdir)[0]))
+            assert_equal(user, pwd.getpwuid(os.getuid())[0])
+            assert_equal(grp, 'everyone')

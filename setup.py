@@ -29,6 +29,7 @@ setup(
         ],
         'console_scripts': [
             'bdist_mpkg = bdist_mpkg.script_bdist_mpkg:main',
+            'reown_mpkg = bdist_mpkg.script_reown_mpkg:main',
         ],
     },
 )
