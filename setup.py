@@ -19,7 +19,8 @@ setup(
     author_email="pythonmac-sig@python.org",
     url="http://undefined.org/python/#bdist_mpkg",
     license="MIT License",
-    packages=['bdist_mpkg'],
+    packages=['bdist_mpkg',
+              'bdist_mpkg.tests'],
     platforms=['any'],
     zip_safe=True,
     entry_points={
