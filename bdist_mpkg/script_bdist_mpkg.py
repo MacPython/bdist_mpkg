@@ -23,7 +23,11 @@ def main():
     g = dict(globals())
     g['__file__'] = sys.argv[0]
     g['__name__'] = '__main__'
-    execfile(sys.argv[0], g, g)
+    if sys.version_info[0] < 3:
+        execfile(sys.argv[0], g, g)
+    else:
+        exec(open(sys.argv[0]).read(), g, g)
+
 
 if __name__ == '__main__':
     main()
