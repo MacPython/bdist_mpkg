@@ -62,14 +62,25 @@ class bdist_mpkg (Command):
          "build a zip containing the package in dist"),
         ('skip-build', None,
          "skip rebuilding everything (for testing/debugging)"),
+        ('real-prefix', None,
+         "Use sys.real_prefix to find prefix for install files - useful "
+         "when building system installers inside virtualenvs"),
+        ('local-scripts', None,
+         "Do not put scripts in /usr/local/bin for framework builds"),
+        ('local-data', None,
+         "Do not put data in /usr/local/bin for framework builds"),
     ]
 
-    boolean_options = ['skip-build', 'keep-temp', 'open', 'zipdist']
+    boolean_options = ['skip-build', 'keep-temp', 'open', 'zipdist',
+                       'real-prefix']
 
     def initialize_options (self):
         self.skip_build = False
         self.keep_temp = False
         self.open = False
+        self.real_prefix = False
+        self.local_scripts = False
+        self.local_data = False
         self.template = None
         self.readme = None
         self.license = None
@@ -160,9 +171,11 @@ class bdist_mpkg (Command):
                 os.path.realpath(getattr(install, 'install_' + scheme)))
 
         if tools.is_framework_python():
-            if self.get_scheme_prefix('scripts').startswith(sys.prefix):
+            if (not self.local_scripts and
+                self.get_scheme_prefix('scripts').startswith(sys.prefix)):
                 self.scheme_map['scripts'] = '/usr/local/bin'
-            if self.get_scheme_prefix('data').startswith(sys.prefix):
+            if (not self.local_data and
+                self.get_scheme_prefix('data').startswith(sys.prefix)):
                 self.scheme_map['data'] = '/usr/local/share'
 
         self.finalize_package_data()
@@ -225,6 +238,8 @@ class bdist_mpkg (Command):
         ]
         if self.keep_temp:
             args.append('--keep-temp')
+        if self.real_prefix: # necessary?
+            args.append('--real-prefix')
         pkg = self.sub_setup(setupfile, args).get_command_obj(
             'bdist_mpkg').metapackagename
         if pkg is not None:
