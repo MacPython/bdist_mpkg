@@ -15,6 +15,7 @@ from functools import partial
 
 from bdist_mpkg.tools import is_framework_python
 
+from nose import SkipTest
 from nose.tools import assert_true, assert_false, assert_equal
 
 call = partial(check_call, shell=True)
@@ -24,7 +25,11 @@ IMG_PATH = '/Volumes/' + VOL_NAME
 
 MYDIR = dirname(__file__)
 chdir(MYDIR + '/../..')
-assert_true(isfile('setup.py'))
+if not isfile('setup.py'):
+    raise SkipTest(
+""" These tests run from the development repository, or an unpacked sdist.
+They won't run from an installed copy""")
+
 
 def install2dmg(dmg_path, opts_str=''):
     # Make, get mpkg installer in dist
