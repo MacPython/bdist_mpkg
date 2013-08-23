@@ -19,8 +19,7 @@ setup(
     author_email="pythonmac-sig@python.org",
     url="https://github.com/matthew-brett/bdist_mpkg",
     license="MIT License",
-    packages=['bdist_mpkg',
-              'bdist_mpkg.tests'],
+    packages=['bdist_mpkg'],
     platforms=['any'],
     zip_safe=True,
     entry_points={
