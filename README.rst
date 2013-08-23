@@ -9,7 +9,7 @@ The code comes from:
 
 http://undefined.org/python/#bdist_mpkg
 
-I imported it from the Subversion repository using svn2git_.
+I (MB) imported it from the Subversion repository using svn2git_.
 
 The code and some docs are on pypi_ at bdist_mpkg_pypi_
 
