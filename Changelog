@@ -30,6 +30,10 @@ Matthew Brett brought it over to github and ported it to Python 3.
     doing automated creation of mpkg installers with accounts that do not have
     administrator permissions.
   * Python 3 compatibility
+  * Some tests
   * Minor code cleanups
   * Don't replace ``-`` with ``_`` in package names (Ralf Gommers)
 
+* 0.4.4
+
+  * Previous released version corresponding to commit ``ed6ec04`
