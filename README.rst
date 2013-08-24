@@ -1,20 +1,34 @@
-##########
+==========
 bdist_mpkg
-##########
+==========
 
-This is the ``bdist_mpkg`` utility to automated the building of OSX ``mpkg``
-files from a python package.
+bdist_mpkg is a distutils plugin that implements the ``bdist_mpkg`` command.
+The command builds a Mac OS X metapackage for use by Installer.app for easy GUI
+installation of Python modules, much like ``bdist_wininst``.
 
-The code comes from:
+It also comes with a ``bdist_mpkg`` script, which is a setup.py front-end that
+will allow you to easy build an installer metapackage from nearly any existing
+package that uses distutils.
+
+Please email the `Python-Mag SIG mailing list
+<http://www.python.org/community/sigs/current/pythonmac-sig/>`_ with questions,
+and let us know of bugs via `github issues
+<https://github.com/matthew-brett/bdist_mpkg/issues>`_
+
+Code
+====
+
+The code started life at:
 
 http://undefined.org/python/#bdist_mpkg
 
-I (MB) imported it from the Subversion repository using svn2git_.
+Bob Ippolito wrote most of the code.
 
-The code and some docs are on pypi_ at bdist_mpkg_pypi_
+The `current repository`_ is on Github.
 
-The main author is Bob Ippolito.
+.. _current repository: http://github.com/matthew-brett/bdist_mpkg
 
-.. _svn2git: https://github.com/nirvdrum/svn2git
-.. _pypi : http://pypi.python.org
-.. _bdist_mpkg_pypi: http://pypi.python.org/pypi/bdist_mpkg
+License
+=======
+
+MIT license.  See the ``LICENSE`` file in the source archive.
