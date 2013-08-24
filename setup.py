@@ -4,6 +4,10 @@ from setuptools import setup
 
 import os
 
+# BEFORE importing distutils, remove MANIFEST. distutils doesn't properly
+# update it when the contents of directories change.
+if os.path.exists('MANIFEST'): os.remove('MANIFEST')
+
 # Get version and release info, which is all stored in bdist_mpkg/info.py
 ver_file = os.path.join('bdist_mpkg', 'info.py')
 VARS = {}
