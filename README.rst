@@ -32,3 +32,8 @@ License
 =======
 
 MIT license.  See the ``LICENSE`` file in the source archive.
+
+Compatibility
+=============
+
+The code should be compatible with Pythons 2.5 through 3.3
