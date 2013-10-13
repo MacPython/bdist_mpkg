@@ -4,11 +4,13 @@ from __future__ import with_statement
 
 import os
 from os.path import abspath, split as psplit, isfile, join as pjoin
+from subprocess import check_call, Popen, PIPE
 
-from ..tools import pax, unpax, ugrp_path
+from ..tools import pax, unpax, ugrp_path, find_program
 
 from ..tmpdirs import InTemporaryDirectory
 
+from nose import SkipTest
 from nose.tools import assert_true, assert_equal
 
 HERE, SELF = psplit(abspath(__file__))
@@ -28,3 +30,16 @@ def test_user_group():
     with InTemporaryDirectory() as tmpdir:
         open('test_file', 'wt').write('hello')
         assert_equal(ugrp_path(tmpdir), ugrp_path('test_file'))
+
+
+def test_find_program():
+    # Test utility to find programs on the path
+    try:
+        check_call(['which', 'which'])
+    except OSError:
+        raise SkipTest('Cannot find `which` on system')
+    proc = Popen(['which', 'which'], stdout=PIPE, stderr=PIPE)
+    out, err = proc.communicate()
+    assert_equal(out.strip(), find_program('which'))
+    assert_equal(find_program('no-reasonable-likelihood'), None)
+    assert_equal(find_program('no-reasonable-likelihood', 'foo'), 'foo')

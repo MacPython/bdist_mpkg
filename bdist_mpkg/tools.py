@@ -3,6 +3,7 @@ from os.path import join as pjoin, abspath
 import grp
 import pwd
 import sys
+from subprocess import Popen, PIPE
 from distutils.util import spawn
 from distutils.version import StrictVersion, LooseVersion
 from distutils.dir_util import mkpath
@@ -12,6 +13,32 @@ from tempfile import mkdtemp
 
 from .tmpdirs import InTemporaryDirectory
 from .py3k import unicode
+
+def back_tick(cmd):
+    """ Return output, error, returncode from system command `cmd`
+    """
+    proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
+    out, err = proc.communicate()
+    return out, err, proc.returncode
+
+
+def find_program(cmd, default=None):
+    """ Find full path to executable for command `cmd`
+
+    Return value of `default` if we can't find `cmd`
+    """
+    try:
+        out, err, code = back_tick(['which', cmd])
+    except OSError:
+        return default
+    if code != 0:
+        return default
+    return out.strip().decode('ascii')
+
+
+PAX_TOOL = find_program('pax', '/bin/pax')
+MKBOM_TOOL = find_program('mkbom', '/usr/bin/mkbom')
+CHOWN_TOOL = find_program('chown', '/usr/sbin/chown')
 
 
 def Version(s):
@@ -45,7 +72,7 @@ def adminperms(src, verbose=0, dry_run=0):
         return False
     return True
 
-def mkbom(src, pkgdir, verbose=0, dry_run=0, TOOL='/usr/bin/mkbom'):
+def mkbom(src, pkgdir, verbose=0, dry_run=0, TOOL=MKBOM_TOOL):
     """
     Create a bill-of-materials (BOM) for the given src directory and store it
     to the given pkg directory
@@ -54,7 +81,7 @@ def mkbom(src, pkgdir, verbose=0, dry_run=0, TOOL='/usr/bin/mkbom'):
     mkpath(os.path.dirname(dest), verbose=verbose, dry_run=dry_run)
     spawn([TOOL, src, dest], verbose=verbose, dry_run=dry_run)
 
-def pax(src, pkgdir, verbose=0, dry_run=0, TOOL='/bin/pax'):
+def pax(src, pkgdir, verbose=0, dry_run=0, TOOL=PAX_TOOL):
     """
     Create a pax gzipped cpio archive of the given src directory and store it
     to the given pkg directory
@@ -107,7 +134,7 @@ def ugrp_path(path):
     return user, group
 
 
-def unpax(pax_file, out_dir=None, TOOL='/bin/pax'):
+def unpax(pax_file, out_dir=None, TOOL=PAX_TOOL):
     """ Unpack a pax archive `pax_file` into `out_dir`
 
     Parameters
@@ -142,7 +169,7 @@ def unpax(pax_file, out_dir=None, TOOL='/bin/pax'):
     return out_dir
 
 
-def reown_paxboms(base_path, user, group, TOOL='/usr/sbin/chown'):
+def reown_paxboms(base_path, user, group, TOOL=CHOWN_TOOL):
     """ Change ownnerhsip files in pax/boms within `base_path`
 
     Parameters
