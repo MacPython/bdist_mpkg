@@ -25,7 +25,7 @@ setup(
     license="MIT License",
     packages=['bdist_mpkg'],
     platforms=['any'],
-    zip_safe=True,
+    zip_safe=False,
     entry_points={
         'distutils.commands': [
             'bdist_mpkg = bdist_mpkg.cmd_bdist_mpkg:bdist_mpkg',
