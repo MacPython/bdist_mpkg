@@ -170,7 +170,7 @@ def unpax(pax_file, out_dir=None, TOOL=PAX_TOOL):
 
 
 def reown_paxboms(base_path, user, group, TOOL=CHOWN_TOOL):
-    """ Change ownnerhsip files in pax/boms within `base_path`
+    """ Change ownership files in pax/boms within `base_path`
 
     Parameters
     ----------
@@ -181,6 +181,8 @@ def reown_paxboms(base_path, user, group, TOOL=CHOWN_TOOL):
         user to which to change ownership
     group : str
         group to which to change ownership
+    TOOL : str, optional
+        path to ``chown`` binary
     """
     for pxbom in find_paxboms(base_path):
         px, bm = [abspath(f) for f in pxbom]
