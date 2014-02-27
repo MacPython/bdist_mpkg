@@ -50,6 +50,12 @@ def Version(s):
 def run_setup(*args, **kwargs):
     """
     Re-entrant version of distutils.core.run_setup()
+
+    ``run_setup()`` uses global variables ``_setup_stop_after`` and
+    ``_setup_distribution`` to store the passed ``stop_after`` argument and the
+    contents of the last read ``setup`` class instance. The setup class
+    instance gets read in the call to ``disutils.core.setup`` that should occur
+    "exec"ing a ``setup.py`` file.
     """
     PRESERVE = '_setup_stop_after', '_setup_distribution'
     d = {}
