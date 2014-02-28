@@ -13,6 +13,7 @@ from tempfile import mkdtemp
 
 from .tmpdirs import InTemporaryDirectory
 from .py3k import unicode
+from . import ducore_fixes
 
 def back_tick(cmd):
     """ Return output, error, returncode from system command `cmd`
@@ -65,7 +66,7 @@ def run_setup(*args, **kwargs):
         except AttributeError:
             pass
     try:
-        return distutils.core.run_setup(*args, **kwargs)
+        return ducore_fixes.run_setup(*args, **kwargs)
     finally:
         for k,v in d.items():
             setattr(distutils.core, k, v)

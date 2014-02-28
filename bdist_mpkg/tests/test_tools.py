@@ -6,7 +6,7 @@ import os
 from os.path import abspath, split as psplit, isfile, join as pjoin
 from subprocess import check_call, Popen, PIPE
 
-from ..tools import pax, unpax, ugrp_path, find_program
+from ..tools import pax, unpax, ugrp_path, find_program, run_setup
 
 from ..tmpdirs import InTemporaryDirectory
 
@@ -43,3 +43,49 @@ def test_find_program():
     assert_equal(out.strip(), find_program('which'))
     assert_equal(find_program('no-reasonable-likelihood'), None)
     assert_equal(find_program('no-reasonable-likelihood', 'foo'), 'foo')
+
+
+setup1 = """
+from distutils.core import setup
+
+setup(name = 'myname')
+"""
+
+setup2 = """
+from distutils.core import setup
+
+if __name__ == '__main__':
+    setup(name = 'myname')
+"""
+
+setup2 = """# Setup called in ifmain block
+from distutils.core import setup
+
+if __name__ == '__main__':
+    setup(name = 'myname')
+"""
+
+setup3 = """# Functions using custom classes
+from distutils.core import setup
+
+class MyClass(object):
+    pass
+
+def get_name():
+    c = MyClass()
+    return 'myname'
+
+setup(name = get_name())
+"""
+
+def test_run_setup():
+    # Test run_setup function
+    # Test fixes for cases in http://bugs.python.org/issue18970
+    for fname, contents in (('setup1.py', setup1),
+                            ('setup2.py', setup2),
+                            ('setup3.py', setup3)):
+        with InTemporaryDirectory():
+            with open(fname, 'wt') as fobj:
+                fobj.write(contents)
+            res = run_setup(fname)
+            assert_equal(res.get_name(), 'myname')
