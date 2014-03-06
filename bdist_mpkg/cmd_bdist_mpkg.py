@@ -461,6 +461,12 @@ class bdist_mpkg (Command):
 
         if not self.keep_temp:
             self.remove_temp()
+        # Warn about permissions
+        mpkg = self.get_metapackage()
+        log.warn('Warning: %s archive files will be installed as owned by '
+                 'current (not installing) user; \nYou may want to run `sudo '
+                 'reown_mpkg %s root admin` to set root:admin ownership of '
+                 'archive files' % (mpkg, mpkg))
         if self.zipdist:
             self.run_zipdist()
         if self.open:
