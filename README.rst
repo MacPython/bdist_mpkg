@@ -42,6 +42,17 @@ From source::
 Usage
 =====
 
+Make sure you are importing ``setuptools`` at the top of your ``setup.py``.
+Maybe something like::
+
+    try:
+        import setuptools
+    except ImportError:
+        pass
+
+This means that you pick up the plugin mechanism that allows the ``bdist_mpkg``
+command to work via ``python setup.py bdist_mpkg``
+
 From your projects base directory (containing ``setup.py``)::
 
     python setup.py bdist_mpkg
