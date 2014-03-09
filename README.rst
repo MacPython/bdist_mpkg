@@ -13,7 +13,7 @@ package that uses distutils.
 Please email the `Python-Mag SIG mailing list
 <http://www.python.org/community/sigs/current/pythonmac-sig/>`_ with questions,
 and let us know of bugs via `github issues
-<https://github.com/matthew-brett/bdist_mpkg/issues>`_
+<https://github.com/MacPython/bdist_mpkg/issues>`_
 
 Code
 ====
@@ -26,7 +26,44 @@ Bob Ippolito wrote most of the code.
 
 The `current repository`_ is on Github.
 
-.. _current repository: http://github.com/matthew-brett/bdist_mpkg
+.. _current repository: http://github.com/MacPython/bdist_mpkg
+
+Install
+=======
+
+Via pip::
+
+    pip install bdist_mpkg
+
+From source::
+
+    python setup.py install
+
+Usage
+=====
+
+Make sure you are importing ``setuptools`` at the top of your ``setup.py``.
+Maybe something like::
+
+    try:
+        import setuptools
+    except ImportError:
+        pass
+
+This means that you pick up the plugin mechanism that allows the ``bdist_mpkg``
+command to work via ``python setup.py bdist_mpkg``
+
+From your projects base directory (containing ``setup.py``)::
+
+    python setup.py bdist_mpkg
+
+You can also run directly via the command line::
+
+    bdist_mpkg setup.py
+
+This will run the built installer by default.
+
+Try ``python setup.py --help bdist_mpkg`` for some options.
 
 License
 =======
